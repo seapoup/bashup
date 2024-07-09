@@ -31,7 +31,7 @@ fi
 # 0. Create snapshot 
 zfs snapshot $snapshot_filesystem@$backup_dataset\_$timestamp
 echo "Creating snapshot $snapshot_filesystem@${backup_dataset}_$timestamp"
-snapshot_latest=$(zfs list -t snapshot | cut -d \  -f 1 | tail -n -1)
+snapshot_latest=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | tail -n -1)
 snapshot_latest_name=$(echo $snapshot_latest | awk -F '@' '{print $NF}')
 
 # 1. Prune snapshots archive
@@ -57,7 +57,7 @@ local_snapshots_disk=$(find $snapshot_location -type f -exec echo "{}" \; | awk 
 echo -e "listing local snapshot files:\r\n$local_snapshots_disk"
 
 # 3. Compare filenames in snapshot folder with zfs list -t snapshot
-local_snapshots_zfs=$(zfs list -t snapshot | cut -d \  -f 1 | awk -F '@' '{print $NF}' | awk 'NR>1')
+local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | awk -F '@' '{print $NF}')
 echo -e "listing local zfs snapshots:\r\n$local_snapshots_zfs"
     
 # 4. Destroy all excess snapshots in zfs system locally: others are stored offsite
@@ -73,7 +73,7 @@ do
 done
 
 # 5. Increment all existing snapshots locally by overwriting file directly
-local_snapshots_zfs=$(zfs list -t snapshot | cut -d \  -f 1 | awk -F '@' '{print $NF}' | awk 'NR>1') # Revaluate after deleting snapshots
+local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | awk -F '@' '{print $NF}') # Revaluate after deleting snapshots
 echo "Latest snapshot is $snapshot_latest"
 for snapshot in $local_snapshots_zfs
 do  
@@ -82,7 +82,6 @@ do
     do
         echo "Archiving updated $interval snapshot of $snapshot "
         zfs send --raw $snapshot_filesystem@$snapshot > $snapshot_location/$interval/$snapshot
-        tar cfp - $snapshot_location/$interval/$snapshot | lz4 -f - $archive_location/$interval/$snapshot.tar.lz4
     done
 done
 
