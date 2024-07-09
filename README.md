@@ -1,2 +1,2 @@
 # bashup
-Collection of bash scripts to safeguard data 
+Collection of shell scripts to safeguard data 
