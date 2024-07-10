@@ -1,8 +1,7 @@
 #!/bin/bash
 
 #
-# Creates an encrypted ZFS snapshot, prunes existing local snapshots, increment all remaining existing snapshots,
-# 'compress' snapshots (will be removed in future version) and optionally rsync them offsite
+# Creates an encrypted ZFS snapshot, prunes existing local snapshots, increment all remaining existing snapshots
 #
 
 # Call variables from the settings file
@@ -46,11 +45,17 @@ done
         
 # List all files in snapshot folder recursively, thus including all daily, weekly, monthly, yearly snapshots
 local_snapshots_disk=$(find $snapshot_location -type f -exec echo "{}" \; | awk -F '/' '{print $NF}')
-tee -a $log_latest <<< "listing local snapshot files:\r\n$local_snapshots_disk"
+tee -a $log_latest << EOT
+Listing local snapshot files:
+$local_snapshots_disk
+EOT
 
 # Compare filenames in snapshot folder with zfs list -t snapshot
 local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | awk -F '@' '{print $NF}')
-tee -a $log_latest <<< "listing local zfs snapshots:\r\n$local_snapshots_zfs"
+tee -a $log_latest << EOT
+Listing local zfs snapshots:
+$local_snapshots_zfs
+EOT
     
 # Destroy all excess snapshots in zfs system locally: others are stored offsite
 tee -a $log_latest <<< "Pruning snapshots in zfs system:"
@@ -77,7 +82,10 @@ do
     done
 done
 
-# 6. Send snapshots offsite # Uncomment to activate
+cat $log_latest >> $log
+tail -n 200 $log > $log_temp && mv $log_temp $log
+
+### Send snapshots offsite # Uncomment to activate
 # echo "Performing remote sync to $remote_username@$remote_ip:$remote_location"
 # rsync -e "ssh -i /home/user/.ssh/public_key_rsa" -Cavz --delete $snapshot_location 
 # $remote_username@$remote_ip:$remote_location
