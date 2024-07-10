@@ -9,7 +9,7 @@
 source settings.cfg
 
 # Create logs folder
-if [ ! -e $bashup_directory ] ; then
+if [ ! -e "$bashup_directory/logs" ] ; then
     mkdir -pv "$bashup_directory/logs"
 fi
 
