@@ -4,6 +4,10 @@
 # Creates an encrypted ZFS snapshot, prunes existing local snapshots, increment all remaining existing snapshots
 #
 
+bashup_directory="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"
+settings="$bashup_directory/settings.cfg"
+cd $bashup_directory
+
 # Call variables from the settings file
 source settings.cfg
 
@@ -21,10 +25,10 @@ if [ ! -e $snapshot_location ] ; then
 fi
 
 # Create snapshot 
-zfs snapshot $snapshot_filesystem@$backup_dataset\_$timestamp
+zfs snapshot $snapshot_filesystem@$filesystem\_$timestamp
 tee $log_latest <<< "$timestamp"
-tee -a $log_latest <<< "Creating snapshot $snapshot_filesystem@${backup_dataset}_$timestamp"
-snapshot_latest=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | tail -n -1)
+tee -a $log_latest <<< "Creating snapshot $snapshot_filesystem@${filesystem}_$timestamp"
+snapshot_latest=$(zfs list -t snapshot | grep $snapshot_filesystem@$filesystem | cut -d \  -f 1 | tail -n -1)
 snapshot_latest_name=$(echo $snapshot_latest | awk -F '@' '{print $NF}')
 
 # Prune snapshots archive
@@ -51,7 +55,7 @@ $local_snapshots_disk
 EOT
 
 # Compare filenames in snapshot folder with zfs list -t snapshot
-local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | awk -F '@' '{print $NF}')
+local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$filesystem | cut -d \  -f 1 | awk -F '@' '{print $NF}')
 tee -a $log_latest << EOT
 Listing local zfs snapshots:
 $local_snapshots_zfs
@@ -70,7 +74,7 @@ do
 done
 
 # Increment all existing snapshots locally by overwriting file directly
-local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$backup_dataset | cut -d \  -f 1 | awk -F '@' '{print $NF}') # Revaluate after deleting snapshots
+local_snapshots_zfs=$(zfs list -t snapshot | grep $snapshot_filesystem@$filesystem | cut -d \  -f 1 | awk -F '@' '{print $NF}') # Revaluate after deleting snapshots
 tee -a $log_latest <<< "Latest snapshot is $snapshot_latest"
 for snapshot in $local_snapshots_zfs
 do  
