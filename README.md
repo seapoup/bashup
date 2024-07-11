@@ -13,10 +13,10 @@ Therefore, it provides:
 * Encryption;
 * Offsite storage.
 
-Requirements
+Requirements:
 * ZFS pool
 
-Optional (but heavily recommended)
+Optional (but heavily recommended):
 * Empty filesystems;
 * Encrypted filesystems;
 * SSH keys to remote system.
