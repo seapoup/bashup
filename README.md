@@ -9,17 +9,17 @@ Why Bashup?
 Bashup can provide complete immortality to your data, as long as at least one snapshot exists. On top of that it uses the `--raw` sending implementation of OpenZFS (https://openzfs.github.io/openzfs-docs/man/master/8/zfs-send.8.html#w~2) so that data can be sent to untrusted machines. 
 
 Therefore, it provides:
-* Incremental snapshots
+* Incremental snapshots;
 * Encryption;
-* Offsite storage;
+* Offsite storage.
 
 Requirements
 * ZFS pool
 
 Optional (but heavily recommended)
-* Empty filesystems
-* Encrypted filesystems
-* SSH keys to remote system
+* Empty filesystems;
+* Encrypted filesystems;
+* SSH keys to remote system.
 
 # Preparation
 * Create an encrypted filesystem and REMEMBER the passphrase:
@@ -117,3 +117,5 @@ Encrypted datasets are only marginably (losslessly) compressible, thus not worth
 ## Under construction
 Insert a sanity check in zfs-snapshot.sh if settings.cfg is in the same folder, otherwise abort
 Insert a sanity check if bashup=found in settings.cfg, otherwise abort
+Moving uncommented rsync of zfs-snapshot.sh to its own script
+Moving variables of folder-backup.sh to settings.cfg
