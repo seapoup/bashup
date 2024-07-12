@@ -30,7 +30,7 @@ Optional (but heavily recommended):
 2. Run the script over an empty filesystem
 `bash ./zfs-snapshot.sh`
 3. Write random data to the filesystem (e.g. 480 MiB)
-`dd if=/dev/zero of=/poolposition/test/data1.tmp bs=16M count=30`
+`dd if=/dev/zero of=/pool/test/data1.tmp bs=16M count=30`
 4. Run the script again
 `bash ./zfs-snapshot.sh`
 5. Repeat this procedure a number of times. In the default configuration 7 daily snapshots are kept. The script is designed to be run once a day. Thus, the eighth snapshot should toss the oldest (i.e. first) snapshot. For example, the data folder structure after 7 snapshots may look like:
