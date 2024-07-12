@@ -56,7 +56,7 @@ total 12G
 -rw-r--r-- 1 root users 2.7G Jul 11 23:52 test_2024-07-11_23-51-14
 -rw-r--r-- 1 root users 3.3G Jul 11 23:53 test_2024-07-11_23-52-16
 ```
-Note the increasing size of the snapshots. ZFS snapshots are created *[atomically](https://openzfs.github.io/openzfs-docs/man/master/8/zfs-snapshot.8.html)*, including only  "modifications to the dataset made by system calls that have successfully completed before that point in time". Therefore the pre-existing snapshots are incremented every time. Besides that, all data present BEFORE the first snapshot is made cannot be recovered later (if lost).
+Note the increasing size of the snapshots. ZFS snapshots are created *[atomically](https://openzfs.github.io/openzfs-docs/man/master/8/zfs-snapshot.8.html)*, including only  "modifications to the dataset made by system calls that have successfully completed before that point in time". Therefore the pre-existing snapshots are incremented every time. Besides that, all data present BEFORE the first snapshot is made cannot be recovered later (if lost).  
 6. Adding more data (~1 GiB) and running the script again deletes the oldest snapshot of its respective category (e.g. `daily`), while, of course, maintaining all the data:
 ```
 total 4.3G
