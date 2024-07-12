@@ -82,7 +82,7 @@ total 16G
 ```
 7. Oh no! Your system burnt/flooded/ransomwared and you have to rebuild from scratch. Fortunately you had a copy of the snapshot file offsite. That means that, for the sake of illustration:
 your filesystem and internal snapshots are gone: `zfs destroy -r pool/test`
-Note that a filesystem cannot be recovered if the system still contains said filesystem, or snapshots thereof.
+Note that a filesystem cannot be recovered if the system still contains said filesystem, or snapshots thereof.  
 7a. If you simply would like to rollback to an existing snapshot, use the *[`zfs rollback`](https://openzfs.github.io/openzfs-docs/man/master/8/zfs-rollback.8.html)* command instead. 
 8. Let's say you would like to return up to and until data4.tmp. After returning the offsite snapshot to your system, you can restore the filesystem.
 `zfs receive -F pool/test < /pool/backup/test/daily/test_2024-07-11_23-50-29`
